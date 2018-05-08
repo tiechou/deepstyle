@@ -1,0 +1,18 @@
+# CNN模型离线训练 
+## 机器：hadoop1664.et2、hadoop1666.et2、hadoop1667.et2
+
+## import tensorflow
+source ~/tensorflow/bin/activate
+
+##
+mkdir -p data_dir/rfrecords;
+python inception/build_image_data.py --train_directory=data_dir/20171020203648/ --validation_directory=data_dir/20171020203648/ --output_directory=data_dir/tfrecords --labels_file=data_dir/label.txt 
+
+##
+python flowers_train.py --num_gpus=2 --batch_size=4 --train_dir=data_dir/checkpoint  --data_dir=data_dir/tfrecords --initial_learning_rate=0.01 --learning_rate_decay_factor=0.94
+
+##
+python flowers_eval.py --eval_dir=data_dir/eval_dir --checkpoint_dir=/Users/wanglifeng/code/deepstyle/data_dir/checkpoint/ --run_once=True --num_examples=782 --data_dir=data_dir/tfrecords
+
+##
+python flowers_predict.py
